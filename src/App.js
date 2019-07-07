@@ -1,23 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
+const initProfile = {
+  followers: null,
+  publicRepos: null
+};
 function App() {
+  const [profile, setProfile] = useState(initProfile);
+
+  async function getProfile() {
+    const response = await fetch("https://api.github.com/users/gitmil");
+    const json = await response.json();
+
+    setProfile({
+      followers: json.followers,
+      publicRepos: json.public_repos
+    });
+  }
+
+  useEffect(() => {
+    getProfile();
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h2>Fetch Data</h2>
+        <h3>{`follower: ${profile.followers}, repos: ${
+          profile.publicRepos
+        }`}</h3>
       </header>
     </div>
   );
